@@ -1,0 +1,11 @@
+[package]
+
+name = "BEAR"
+version = "0.0.1"
+authors = ["Bob Hosten <bob.hostern@gmail.com>"]
+
+[dependencies.hammer]
+git = "https://github.com/Bobhostern/hammer.rs.git"
+
+[[bin]]
+name = "bear"

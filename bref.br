@@ -1,0 +1,28 @@
+*******++!--***+!*---!!+++! ^#*! >+[>+] 
+BEAR
+
+It are an awesome Brainf***-esque language!
+We don't have to worry here about any special symbols, because the little header runs forever!
+
+We have a wrapping memory pointer with 4096 cells, each the value of an int.
+
+An implementation written in Rust is available.
+
+The actors:
+> - go forward one cell - FWD
+< - go back one cell - BCK
++ - increase the value of the current cell by one - INC
+- - decrease the value of the current cell by one - DCR
+! - print the value of the current cell as a character - PCC
+) - go forward ten cells - ADV
+( - go back ten cells - RWD
+* - increase the value of the current cell by ten - LFT
+/ - decrease the value of the current cell by ten - DWN
+[ - go over to the next ] or the end of the file if the current cell's value is 0 - LBL
+] - go back to the last [ or the beginning of the file if the current cell's calue is not 0 - RBL
+? - print the location of the memory pointer - PPL
+& - print the location of the memory pointer as a char - PPC
+. - print the value of the current cell - PCL
+` - get a character as input and store its value in the current cell - INP
+^ - reset the memory pointer to 0 - RPT
+# - Set current cell's value to 0 - RCV

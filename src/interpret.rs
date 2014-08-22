@@ -5,6 +5,7 @@ use std::io;
 pub fn interpret(str: String, mem: &mut Memory) {
 	let test_arr = str.into_bytes();
 	let mut test_ptr = 0u;
+	let mut reader = io::stdin();
 
 	while test_ptr < test_arr.len() {
 		let mut ainc = true;
@@ -38,7 +39,7 @@ pub fn interpret(str: String, mem: &mut Memory) {
 			'&' => print!("{}", mem.getptr() as u8 as char),
 			'.' => print!("{}", mem.get()),
 			'`' => {
-				let inchr = match io::stdin().read_byte() {
+				let inchr = match reader.read_byte() {
 					Ok(val) => val,
 					Err(err) => {
 						if err.kind != io::EndOfFile {

@@ -10,6 +10,7 @@ use interpret::interpret;
 
 use hammer::{decode_args, usage};
 use std::os;
+use std::io;
 
 mod memory;
 mod interpret;
@@ -17,12 +18,13 @@ mod interpret;
 #[deriving(Decodable, Show)]
 struct BearOpts {
 	file: Option<String>,
-	help: bool
+	help: bool,
+	interactive: bool
 }
 
 hammer_config!(BearOpts "BEAR - Another BF",
 	|c| { 
-		c.short("file", 'f')
+		c.short("file", 'f').short("help", 'h').short("interactive", 'i')
     }
 )
 
@@ -36,6 +38,17 @@ fn main() {
 	    println!("Usage: {}", os::args().get(0));
 	    println!("{}", usage_text);
 	    println!("{}", desc.unwrap());
+	}
+	else if opts.interactive {
+        let mut mem = Memory::new();
+
+        print!("> ");
+       	for line in io::stdin().lines() {
+       		match line {
+       			Ok(val) => { interpret(val, &mut mem); print!("\n> "); },
+       			Err(err) => fail!(err.desc)
+       		};
+        }
 	}
 	else {
 		let filename = match opts.file {

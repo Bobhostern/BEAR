@@ -1,0 +1,22 @@
+We repeat the word 'Hello' 1,000 times
+<*
+[
+	>********** 		Move to cell zero and add 100
+	<- 					Decrement cell counter
+] 						Loop until (num loop counter) is 0
+> 						Move back to cell 0 (hello loop counter)
+[
+	>#*******++ 		H
+	>#**********+ 		e
+	>#***********-- 	l
+	>#***********-- 	l
+	>#***********+ 		o
+	>#* 				\n
+	<<<<<!>!>!>!>!>! 	Print it all out
+	<<<<<<- 			Decrement loop counter
+] 						Loop until (hello loop counter) is 0
+
+
+
+The entire program reduced to one line (wrapped in a comment)
+)[-][<+[>**********<-]>[>#*******++>#**********+>#***********-->#***********-->#***********+>#*<<<<<!>!>!>!>!>!<<<<<<-]]

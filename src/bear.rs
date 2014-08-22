@@ -28,6 +28,18 @@ hammer_config!(BearOpts "BEAR - Another BF",
     }
 )
 
+fn interactive_console() {
+	let mut mem = Memory::new();
+
+    print!("> ");
+   	for line in io::stdin().lines() {
+   		match line {
+   			Ok(val) => { interpret(val, &mut mem); print!("\n> "); },
+   			Err(err) => fail!(err.desc)
+   		};
+    }
+}
+
 fn main() {
 	let opts: BearOpts = match decode_args(os::args().tail()) {
 		Ok(val) => val,
@@ -40,15 +52,7 @@ fn main() {
 	    println!("{}", desc.unwrap());
 	}
 	else if opts.interactive {
-        let mut mem = Memory::new();
-
-        print!("> ");
-       	for line in io::stdin().lines() {
-       		match line {
-       			Ok(val) => { interpret(val, &mut mem); print!("\n> "); },
-       			Err(err) => fail!(err.desc)
-       		};
-        }
+        interactive_console();
 	}
 	else {
 		let filename = match opts.file {

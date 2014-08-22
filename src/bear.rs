@@ -16,7 +16,7 @@ mod interpret;
 
 #[deriving(Decodable, Show)]
 struct BearOpts {
-	file: String,
+	file: Option<String>,
 	help: bool
 }
 
@@ -38,14 +38,18 @@ fn main() {
 	    println!("{}", desc.unwrap());
 	}
 	else {
-		let test = match File::open(&Path::new(opts.file)).read_to_end() {
+		let filename = match opts.file {
+			Some(val) => val,
+			None => fail!("--file required")
+		};
+		let test = match File::open(&Path::new(filename)).read_to_end() {
 			Ok(val) => { 
 				match String::from_utf8(val) {
 					Ok(val) => val,
 					Err(err) => fail!(err)
 				} 
 			},
-			Err(err) => fail!(err)
+			Err(err) => fail!(err.desc)
 		};
 
 		let mut mem = Memory::new();

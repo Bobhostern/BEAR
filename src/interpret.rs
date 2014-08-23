@@ -3,13 +3,13 @@ use std::io;
 
 #[allow(dead_assignment)]
 pub fn interpret(str: String, mem: &mut Memory) {
-	let test_arr = str.into_bytes();
-	let mut test_ptr = 0u;
+	let code_arr = str.into_bytes();
+	let mut code_ptr = 0u;
 	let mut reader = io::stdin();
 
-	while test_ptr < test_arr.len() {
+	while code_ptr < code_arr.len() {
 		let mut ainc = true;
-		match test_arr[test_ptr] as char {
+		match code_arr[code_ptr] as char {
 			'>' => mem.fwd(),
 			'+' => mem.inc(),
 			'-' => mem.dcr(),
@@ -21,16 +21,16 @@ pub fn interpret(str: String, mem: &mut Memory) {
 			'(' => mem.rwd(10),
 			'[' => {
 				if mem.get() == 0 {
-					while test_ptr < test_arr.len() && test_arr[test_ptr] as char != ']' { 
-						test_ptr += 1; 
+					while code_ptr < code_arr.len() && code_arr[code_ptr] as char != ']' { 
+						code_ptr += 1; 
 					}
 					ainc = false;
 				}
 			},
 			']' => {
 				if mem.get() != 0 {
-					while test_ptr > 0 && test_arr[test_ptr] as char != '[' { 
-						test_ptr -= 1;
+					while code_ptr > 0 && code_arr[code_ptr] as char != '[' { 
+						code_ptr -= 1;
 					}
 					ainc = false;
 				}
@@ -58,10 +58,10 @@ pub fn interpret(str: String, mem: &mut Memory) {
 			_ => { /* We're a pretty ignorant parser... */ }
 		}
 		if ainc {
-			test_ptr += 1;
+			code_ptr += 1;
 		}
 		ainc = true;
-		//println!("{}", test_arr[test_ptr] as char);
+		//println!("{}", code_arr[code_ptr] as char);
 	}
 
 	// Prints the last accessed cell's value
@@ -71,13 +71,13 @@ pub fn interpret(str: String, mem: &mut Memory) {
 /*
 #[allow(dead_assignment)]
 pub fn dummy_interpret(str: String, mem: &mut Memory) {
-	let test_arr = str.into_bytes();
-	let mut test_ptr = 0u;
+	let code_arr = str.into_bytes();
+	let mut code_ptr = 0u;
 	let mut input = io::stdin();
 
-	while test_ptr < test_arr.len() {
+	while code_ptr < code_arr.len() {
 		let mut ainc = true;
-		match test_arr[test_ptr] as char {
+		match code_arr[code_ptr] as char {
 			'>' => {println!("FWD"); mem.fwd()},
 			'+' => {println!("INC"); mem.inc()},
 			'-' => {println!("DCR"); mem.dcr()},
@@ -90,8 +90,8 @@ pub fn dummy_interpret(str: String, mem: &mut Memory) {
 			'[' => {
 				println!("LBL");
 				if mem.get() == 0 {
-					while test_ptr < test_arr.len() && test_arr[test_ptr] as char != ']' { 
-						test_ptr += 1; 
+					while code_ptr < code_arr.len() && code_arr[code_ptr] as char != ']' { 
+						code_ptr += 1; 
 					}
 					ainc = false;
 				}
@@ -99,8 +99,8 @@ pub fn dummy_interpret(str: String, mem: &mut Memory) {
 			']' => {
 				println!("RBL");
 				if mem.get() != 0 {
-					while test_ptr > 0 && test_arr[test_ptr] as char != '[' { 
-						test_ptr -= 1;
+					while code_ptr > 0 && code_arr[code_ptr] as char != '[' { 
+						code_ptr -= 1;
 					}
 					ainc = false;
 				}
@@ -129,10 +129,10 @@ pub fn dummy_interpret(str: String, mem: &mut Memory) {
 			_ => { }
 		}
 		if ainc {
-			test_ptr += 1;
+			code_ptr += 1;
 		}
 		ainc = true;
-		//println!("{}", test_arr[test_ptr] as char);
+		//println!("{}", code_arr[code_ptr] as char);
 	}
 }
 */

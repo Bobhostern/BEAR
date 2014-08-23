@@ -1,5 +1,6 @@
 use memory::Memory;
 use std::io;
+use unicode::char;
 
 #[allow(dead_assignment)]
 pub fn interpret(str: String, mem: &mut Memory) {
@@ -14,7 +15,10 @@ pub fn interpret(str: String, mem: &mut Memory) {
 			'+' => mem.inc(),
 			'-' => mem.dcr(),
 			'<' => mem.bck(),
-			'!' => print!("{}", mem.get() as u8 as char),
+			'!' => print!("{}", match char::from_u32(mem.get() as u32) {
+				Some(chr) => chr,
+				None => fail!("Invalid unicode value: {}", mem.get())
+			}),
 			'*' => mem.lft(10),
 			'/' => mem.dwn(10),
 			')' => mem.adv(10),
@@ -36,7 +40,10 @@ pub fn interpret(str: String, mem: &mut Memory) {
 				}
 			},
 			'?' => print!("{}", mem.getptr()),
-			'&' => print!("{}", mem.getptr() as u8 as char),
+			'&' => print!("{}", match char::from_u32(mem.getptr() as u32) {
+				Some(chr) => chr,
+				None => fail!("Invalid unicode value: {}", mem.get())
+			}),
 			'.' => print!("{}", mem.get()),
 			'`' => {
 				let inchr = match reader.read_byte() {

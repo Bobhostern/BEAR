@@ -1,9 +1,10 @@
-*******++!--***+!*---!!+++! ^#*! >+[>+] 
+*******++!--***+!*---!!+++! #*! >+[>+] 
 BEAR
 
 It are an awesome Brainf***-esque language!
-We don't have to worry here about any special symbols, because the little header runs forever!
+We don't worry here about any special symbols, because the header runs forever!
 
+=== TECHNICAL DETAILS ===
 We have a wrapping memory pointer with 4096 cells, each the value of an int.
 
 An implementation written in Rust is available.

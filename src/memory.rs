@@ -84,20 +84,3 @@ impl Memory {
 		}
 	}
 }
-
-impl Iterator<int> for Memory {
-	fn next(&mut self) -> Option<int> {
-		let ret = if self.memptr < MEMORY_SIZE {
-			// Get the memory at this location
-			Some(self.mem[self.memptr])
-		} 
-		else {
-			// Reset the memory pointer
-			self.memptr = 0;
-			// You've went through all the memory
-			None
-		};
-		self.memptr += 1;
-		ret
-	}
-}

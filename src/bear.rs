@@ -34,7 +34,7 @@ fn interactive_console() {
     print!("> ");
     for line in io::stdin().lines() {
         match line {
-            Ok(val) => { interpret(val, &mut mem); print!("\n> "); },
+            Ok(val) => { interpret(val, &mut mem, true); print!("\n> "); },
             Err(err) => fail!(err.desc)
         };
     }
@@ -71,6 +71,6 @@ fn main() {
 
         let mut mem = Memory::new();
 
-        interpret(test, &mut mem);
+        interpret(test, &mut mem, false);
     }
 }

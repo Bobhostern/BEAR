@@ -1,4 +1,4 @@
-static MEMORY_SIZE: uint = 4096;
+pub static MEMORY_SIZE: uint = 4096;
 
 pub struct Memory {
 	mem: [int, ..MEMORY_SIZE],

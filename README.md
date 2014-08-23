@@ -32,7 +32,5 @@ Excerpt from bref.br (about op codes):
     
 Anyways, I hope you have as much time playing around with this as I had making this. This was done in one afternoon, so it's a bit rough around the edges.
 
-We now have Unicode support, but calling `!` on a cell with a negative value now throws an error, so be careful!
-
 [rust]: http://rust-lang.org
 [hammer]: https://github.com/Bobhostern/hammer.rs

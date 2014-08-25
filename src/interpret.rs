@@ -99,7 +99,7 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 					// Print the indicies
 					for cellptr in cellvec.iter() {
 						mem.setptr(cellptr.clone());
-						println!("Cell #{}: {}", cellptr, mem.get());
+						println!("Cell #{}: {} ({})", cellptr, mem.get(), mem.get() as u8 as char);
 					}
 					// Reset the pointer
 					mem.setptr(ptr);

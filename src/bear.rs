@@ -19,18 +19,24 @@ mod interpret;
 struct BearOpts {
     file: Option<String>,
     help: bool,
-    interactive: bool
+    interactive: bool,
+    debug: bool
 }
 
 hammer_config!(BearOpts "BEAR - Another BF",
     |c| { 
-        c.short("file", 'f').short("help", 'h').short("interactive", 'i')
+        c
+        .short("file", 'f')
+        .short("help", 'h')
+        .short("interactive", 'i')
+        .short("debug", 'd')
     }
 )
 
 fn interactive_console() {
     let mut mem = Memory::new();
 
+    println!("BEAR Interactive Console ver. 1.0");
     print!("> ");
     for line in io::stdin().lines() {
         match line {
@@ -71,6 +77,6 @@ fn main() {
 
         let mut mem = Memory::new();
 
-        interpret(test, &mut mem, false);
+        interpret(test, &mut mem, opts.debug);
     }
 }

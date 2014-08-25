@@ -2,13 +2,14 @@
 
 Well, I was trying to learn Rust, looking around the internets, then I see the Rust example at [the Rust homepage][rust], and having come in contact with Brainfsck at an earlier time, this came into being. After quickly fixing [hammer.rs][hammer], I implemented this language. I purposedly changed a few opcodes from Brainfsck, just to throw you off. ;-) 
 
-Five examples are included:
+Six examples are included:
 
 - bref.br (Technically, this is just an op listing...)
 - bf.br (My first real example.)
 - hello_loop.br (Who wants to see "Hello" printed to their console 1,000 times?)
 - hello_name.br (A stalkerish program...)
 - hello_name_ptr.br (Exactly like hello_name.br, except we use the memory pointer for constants rather than hardcoding memory.)
+- cat.br (Of course a cat is needed everywhere)
 
 Excerpt from bref.br (about op codes):
 

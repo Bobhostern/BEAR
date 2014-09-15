@@ -1,13 +1,15 @@
+use std::collections::HashMap;
 pub static MEMORY_SIZE: uint = 4096;
 
 pub struct Memory {
 	mem: [int, ..MEMORY_SIZE],
+	procs: HashMap<char, String>,
 	memptr: uint
 }
 
 impl Memory {
 	pub fn new() -> Memory {
-		Memory { mem: [0, ..MEMORY_SIZE], memptr: 0 }
+		Memory { mem: [0, ..MEMORY_SIZE], procs: HashMap::new(), memptr: 0 }
 	}
 
 	pub fn getptr(&self) -> uint {
@@ -81,6 +83,17 @@ impl Memory {
 		while cnt < by {
 			self.dcr();
 			cnt += 1;
+		}
+	}
+
+	pub fn add_proc(&mut self, chr: char, strng: String) {
+		self.procs.insert(chr, strng);
+	}
+
+	pub fn get_proc(&self, chr: char) -> &String {
+		match self.procs.find(&chr) {
+			Some(val) => val,
+			None => fail!("Proc not found: {}", chr)
 		}
 	}
 }

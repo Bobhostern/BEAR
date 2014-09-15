@@ -4,7 +4,7 @@ use std::io;
 
 #[allow(dead_assignment)]
 pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
-	let code_arr = str.into_bytes();
+	let mut code_arr = str.into_bytes();
 	let mut code_ptr = 0u;
 	let mut reader = io::stdin();
 
@@ -104,7 +104,35 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 					// Reset the pointer
 					mem.setptr(ptr);
 				}
-			}
+			},
+			':' => {
+				// Get proc key
+				code_ptr += 1;
+				let proc_key = code_arr[code_ptr];
+				// Eat it =
+				code_ptr += 1;
+				let mut arr = Vec::new();
+				while code_ptr < code_arr.len() && code_arr[code_ptr] as char != ';' { 
+					arr = arr.append([code_arr[code_ptr]]);
+					code_ptr += 1;
+				}
+				mem.add_proc(proc_key as char, match String::from_utf8(arr){
+					Ok(val) => val,
+					Err(err) => fail!(err)
+				})
+			},
+			'\\' => {
+				// Get proc key
+				code_ptr += 1;
+				let proc_key = code_arr[code_ptr];
+				let strg = mem.get_proc(proc_key as char).clone();
+
+				code_arr = strg.into_bytes().append(code_arr.slice(code_ptr, code_arr.len()));
+				// Reset the program pointer to the beginning
+				code_ptr = 0;
+				// Don't go forward: We just reset the pointer!
+				ainc = false;
+			},
 			_ => { /* We're a pretty ignorant parser... */ }
 		}
 		if ainc {

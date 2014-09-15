@@ -30,8 +30,19 @@ Excerpt from bref.br (about op codes):
     ` - get a character as input and store its value in the current cell - INP
     ^ - reset the memory pointer to 0 - RPT
     # - Set current cell's value to 0 - RCV
+    : - Makes a proc - NPC
+    ; - Ends a proc - EPC
+    \ - Call a proc - CPC
     
 Anyways, I hope you have as much time playing around with this as I had making this. This was done in one afternoon, so it's a bit rough around the edges.
 
 [rust]: http://rust-lang.org
 [hammer]: https://github.com/Bobhostern/hammer.rs
+
+## About procs
+Procs start with a : followed by a character, then the proc itself, terminated by a semi-colon.
+To call a proc, type in \ followed by the character used to represent it.
+
+Example:
+
+    :*++++++++++;\*!

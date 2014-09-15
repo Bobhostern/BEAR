@@ -1,11 +1,12 @@
-*>              \n
-*******++>      H
-**********+>    e
-***********-->  l
-***********-->  l
-***********+>   o
-****++++>       ,
-***++>            space
+:****;
+*>              newline
+\*\**++>      H
+\*\*\**+>    e
+\*\*\***-->  l
+\*\*\***-->  l
+\*\*\***+>   o
+\**++++>       ,
+\*++>            space
 `[>`]           Get your name, cat style
 ^[!>]           Go to the start, and print the string as a whole
 *****----!#*!   Add a period and newline

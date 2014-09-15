@@ -125,13 +125,20 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 				// Get proc key
 				code_ptr += 1;
 				let proc_key = code_arr[code_ptr];
+				// Eat that char
+				code_ptr += 1;
 				let strg = mem.get_proc(proc_key as char).clone();
+				//println!("{}", strg);
 
 				code_arr = strg.into_bytes().append(code_arr.slice(code_ptr, code_arr.len()));
 				// Reset the program pointer to the beginning
 				code_ptr = 0;
 				// Don't go forward: We just reset the pointer!
 				ainc = false;
+				/*println!("{}", match String::from_utf8(code_arr.clone()) {
+					Ok(val) => val,
+					Err(err) => fail!(err)
+				})*/
 			},
 			_ => { /* We're a pretty ignorant parser... */ }
 		}

@@ -27,3 +27,6 @@ The actors:
 ` - get a character as input and store its value in the current cell - INP
 ^ - reset the memory pointer to 0 - RPT
 # - Set current cell's value to 0 - RCV
+: - Makes a proc - NPC
+; - Ends a proc - EPC
+\ - Call a proc - CPC

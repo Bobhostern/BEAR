@@ -1,82 +1,83 @@
-#![feature(phase)]
+extern crate rustc_serialize;
+extern crate docopt;
 
-extern crate serialize;
-#[phase(plugin, link)]
-extern crate hammer;
-
-use std::io::File;
+use std::fs::File;
+use std::path::Path;
 use memory::Memory;
 use interpret::interpret;
 
-use hammer::{decode_args, usage};
-use std::os;
+use docopt::Docopt;
 use std::io;
 
 mod memory;
 mod interpret;
 
-#[deriving(Decodable, Show)]
+#[derive(RustcDecodable)]
 struct BearOpts {
-    file: Option<String>,
-    help: bool,
-    interactive: bool,
-    debug: bool
+    flag_file: Option<String>,
+    flag_help: bool,
+    flag_interactive: bool,
+    flag_debug: bool
 }
 
-hammer_config!(BearOpts "BEAR - Another BF",
-    |c| { 
-        c
-        .short("file", 'f')
-        .short("help", 'h')
-        .short("interactive", 'i')
-        .short("debug", 'd')
-    }
-)
+const USAGE: &'static str = "
+BEAR - Another BF.
 
-fn interactive_console() {
+USAGE:
+    bear (-f FILE | --file FILE | -i | --interactive) [-d | --debug]
+    bear (-h | --help)
+
+Options:
+    -h, --help  Show usage description.
+    -f FILE, --file FILE  Read file and interpret it.
+    -d, --debug  Enter debug mode.
+    -i, --interactive  Enter interactive mode.
+";
+
+fn interactive_console(opts: &BearOpts) {
+    use std::io::BufRead;
+
     let mut mem = Memory::new();
 
     println!("BEAR Interactive Console ver. 1.0");
     print!("> ");
-    for line in io::stdin().lines() {
+    let stdin = io::stdin();
+    for line in stdin.lock().lines() {
         match line {
-            Ok(val) => { interpret(val, &mut mem, true); print!("\n> "); },
-            Err(err) => fail!(err.desc)
+            Ok(val) => { interpret(val, &mut mem, opts.flag_debug); print!("\n> "); },
+            Err(err) => panic!("{}", err)
         };
     }
 }
 
 fn main() {
-    let opts: BearOpts = match decode_args(os::args().tail()) {
-        Ok(val) => val,
-        Err(err) => fail!(err.message)
-    };
-    if opts.help {
-        let (desc, usage_text) = usage::<BearOpts>(true);
-        println!("Usage: {}", os::args().get(0));
-        println!("{}", usage_text);
-        println!("{}", desc.unwrap());
+    use std::io::Read;
+
+    let opts: BearOpts = Docopt::new(USAGE)
+                            .and_then(|d| d.decode())
+                            .unwrap_or_else(|e| e.exit());
+    if opts.flag_help {
+        println!("{}", USAGE);
     }
-    else if opts.interactive {
-        interactive_console();
+    else if opts.flag_interactive {
+        interactive_console(&opts);
     }
     else {
-        let filename = match opts.file {
+        let filename = match opts.flag_file {
             Some(val) => val,
-            None => fail!("--file required")
+            None => panic!("--file required")
         };
-        let test = match File::open(&Path::new(filename)).read_to_end() {
-            Ok(val) => { 
-                match String::from_utf8(val) {
-                    Ok(val) => val,
-                    Err(err) => fail!(err)
-                } 
+        let test = match File::open(&Path::new(&filename)) {
+            Ok(mut val) => {
+                let mut s = String::new();
+                val.read_to_string(&mut s).unwrap();
+                s
             },
-            Err(err) => fail!(err.desc)
+            Err(err) => panic!("{}", err)
         };
 
         let mut mem = Memory::new();
 
-        interpret(test, &mut mem, opts.debug);
+        interpret(test, &mut mem, opts.flag_debug);
     }
 }

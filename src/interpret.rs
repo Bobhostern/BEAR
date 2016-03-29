@@ -2,14 +2,14 @@ use memory::Memory;
 use memory;
 use std::io;
 
-#[allow(dead_assignment)]
-pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
-	let code_arr = str.into_bytes();
-	let mut code_ptr = 0u;
-	let mut reader = io::stdin();
+pub fn interpret(strg: String, mem: &mut Memory, debug: bool) {
+	use std::io::Read;
+
+	let code_arr = strg.into_bytes();
+	let mut code_ptr = 0usize;
+	let mut ainc = true;
 
 	while code_ptr < code_arr.len() {
-		let mut ainc = true;
 		match code_arr[code_ptr] as char {
 			'>' => mem.fwd(),
 			'+' => mem.inc(),
@@ -22,15 +22,15 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 			'(' => mem.rwd(10),
 			'[' => {
 				if mem.get() == 0 {
-					while code_ptr < code_arr.len() && code_arr[code_ptr] as char != ']' { 
-						code_ptr += 1; 
+					while code_ptr < code_arr.len() && code_arr[code_ptr] as char != ']' {
+						code_ptr += 1;
 					}
 					ainc = false;
 				}
 			},
 			']' => {
 				if mem.get() != 0 {
-					while code_ptr > 0 && code_arr[code_ptr] as char != '[' { 
+					while code_ptr > 0 && code_arr[code_ptr] as char != '[' {
 						code_ptr -= 1;
 					}
 					ainc = false;
@@ -40,48 +40,53 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 			'&' => print!("{}", mem.getptr() as u8 as char),
 			'.' => print!("{}", mem.get()),
 			'`' => {
-				let inchr = match reader.read_byte() {
-					Ok(val) => val,
-					Err(err) => {
-						if err.kind != io::EndOfFile {
-							fail!(err)
-						}
-						else {
-							0 // EOF
-						}
+				loop {
+					match io::stdin().bytes().take(1).next() {
+						Some(Ok(inchr)) => {
+							match inchr as i32 {
+								4 | 26 => mem.set(0), // The cheat. RN, cannot detect EOF, so we do this...
+							 	inchr => mem.set(inchr)
+							}
+						},
+						Some(Err(err)) => {
+							match err.kind() {
+								io::ErrorKind::UnexpectedEof => mem.set(0),
+								_ => panic!("{}", err)
+							}
+						},
+						None => mem.set(0)
 					}
-				};
-
-				mem.set(inchr as int);
+					break
+				}
 			},
 			'^' => mem.setptr(0),
 			'#' => mem.set(0),
 			'$' => {
 				if debug {
 					// How far do we want to search?
-					static SEARCH_RADIUS: uint = 5;
+					static SEARCH_RADIUS: u32 = 5;
 					// Save our current location
 					let ptr = mem.getptr();
 					// The list of indices to show
 					let mut cellvec = Vec::new();
 					// The number used to calculate the indices
-					let mut vptr: int = ptr as int;
+					let mut vptr: i32 = ptr as i32;
 
 					// Do a -SEARCH_RADIUS amount of indices behind (with wrapping)
-					vptr -= SEARCH_RADIUS as int;
-					let mut cnt = 0u;
+					vptr -= SEARCH_RADIUS as i32;
+					let mut cnt = 0u32;
 			 		while cnt < SEARCH_RADIUS {
 						if vptr < 0 {
-							cellvec.push(memory::MEMORY_SIZE - (-vptr) as uint);
+							cellvec.push(memory::MEMORY_SIZE - (-vptr) as usize);
 						} else {
-							cellvec.push(vptr as uint);
+							cellvec.push(vptr as usize);
 						}
 						vptr += 1;
 						cnt += 1;
 					}
 
 					// Put the current pointer location
-					vptr = ptr as int;
+					vptr = ptr as i32;
 					cnt = 0;
 					cellvec.push(ptr);
 
@@ -89,10 +94,10 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 					while cnt < SEARCH_RADIUS {
 						vptr += 1;
 						// Add then check for bounds, to properly limit the indice
-						if (vptr as uint) == memory::MEMORY_SIZE {
+						if (vptr as usize) == memory::MEMORY_SIZE {
 							vptr = 0;
 						}
-						cellvec.push(vptr as uint);
+						cellvec.push(vptr as usize);
 						cnt += 1;
 					}
 
@@ -111,78 +116,5 @@ pub fn interpret(str: String, mem: &mut Memory, debug: bool) {
 			code_ptr += 1;
 		}
 		ainc = true;
-		//println!("{}", code_arr[code_ptr] as char);
-	}
-
-	// Prints the last accessed cell's value
-	// println!("{}", mem.get());
-}
-
-/*
-#[allow(dead_assignment)]
-pub fn dummy_interpret(str: String, mem: &mut Memory) {
-	let code_arr = str.into_bytes();
-	let mut code_ptr = 0u;
-	let mut input = io::stdin();
-
-	while code_ptr < code_arr.len() {
-		let mut ainc = true;
-		match code_arr[code_ptr] as char {
-			'>' => {println!("FWD"); mem.fwd()},
-			'+' => {println!("INC"); mem.inc()},
-			'-' => {println!("DCR"); mem.dcr()},
-			'<' => {println!("BCK"); mem.bck()},
-			'!' => println!("PCC*"),
-			'*' => {println!("LFT"); mem.lft(10)},
-			'/' => {println!("DWN"); mem.dwn(10)},
-			')' => {println!("ADV"); mem.adv(10)},
-			'(' => {println!("RWD"); mem.rwd(10)},
-			'[' => {
-				println!("LBL");
-				if mem.get() == 0 {
-					while code_ptr < code_arr.len() && code_arr[code_ptr] as char != ']' { 
-						code_ptr += 1; 
-					}
-					ainc = false;
-				}
-			},
-			']' => {
-				println!("RBL");
-				if mem.get() != 0 {
-					while code_ptr > 0 && code_arr[code_ptr] as char != '[' { 
-						code_ptr -= 1;
-					}
-					ainc = false;
-				}
-			},
-			'?' => println!("PPL*"),
-			'&' => println!("PPC*"),
-			'.' => println!("PCL*"),
-			'`' => {
-				println!("INP");
-				let inchr = match input.read_byte() {
-					Ok(val) => val,
-					Err(err) => {
-						if err.kind != io::EndOfFile {
-							fail!(err)
-						}
-						else {
-							0 // EOF
-						}
-					}
-				};
-
-				mem.set(inchr as int);
-			},
-			'^' => {println!("RPT"); mem.setptr(0)},
-			'#' => {println!("RCV"); mem.set(0)},
-			_ => { }
-		}
-		if ainc {
-			code_ptr += 1;
-		}
-		ainc = true;
-		//println!("{}", code_arr[code_ptr] as char);
 	}
 }
-*/

@@ -1,13 +1,13 @@
-Exactly like hello_name, except we use the memory pointer for the hardcoded parts instead,
-so it is much smaller in terms of memory usage (Not that that would matter, as the interpreter
-uses a fixed size array anyways)
+Exactly like hello_name except we use the memory pointer for the hardcoded parts instead
+so it is much smaller in terms of memory usage Not that that would matter as the interpreter
+uses a fixed size array anyways
 `[>`]
-^)&              
-^)))))))>>&    
-^))))))))))>&  
+^)&
+^)))))))>>&
+^))))))))))>&
 ^)))))))))))<<&&
-^)))))))))))>& 
-^))))>>>>&   
-^)))>>&    
+^)))))))))))>&
+^))))>>>>&
+^)))>>&
 ^[!>]
-^)))))<<<<&^)&  
+^)))))<<<<&^)&

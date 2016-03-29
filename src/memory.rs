@@ -1,30 +1,30 @@
-pub static MEMORY_SIZE: uint = 4096;
+pub const MEMORY_SIZE: usize = 4096;
 
 pub struct Memory {
-	mem: [int, ..MEMORY_SIZE],
-	memptr: uint
+	mem: [i32; MEMORY_SIZE],
+	memptr: usize
 }
 
 impl Memory {
 	pub fn new() -> Memory {
-		Memory { mem: [0, ..MEMORY_SIZE], memptr: 0 }
+		Memory { mem: [0; MEMORY_SIZE], memptr: 0 }
 	}
 
-	pub fn getptr(&self) -> uint {
+	pub fn getptr(&self) -> usize {
 		self.memptr
 	}
 
-	pub fn setptr(&mut self, loc: uint) {
+	pub fn setptr(&mut self, loc: usize) {
 		if loc < MEMORY_SIZE {
 			self.memptr = loc;
 		}
 	}
 
-	pub fn set(&mut self, val: int) {
+	pub fn set(&mut self, val: i32) {
 		self.mem[self.memptr] = val
 	}
 
-	pub fn get(&self) -> int {
+	pub fn get(&self) -> i32 {
 		self.mem[self.memptr]
 	}
 
@@ -35,8 +35,8 @@ impl Memory {
 		}
 	}
 
-	pub fn adv(&mut self, by: uint) {
-		let mut cnt = 0u;
+	pub fn adv(&mut self, by: u32) {
+		let mut cnt = 0u32;
 		while cnt < by {
 			self.fwd();
 			cnt += 1;
@@ -52,8 +52,8 @@ impl Memory {
 		}
 	}
 
-	pub fn rwd(&mut self, by: uint) {
-		let mut cnt = 0u;
+	pub fn rwd(&mut self, by: u32) {
+		let mut cnt = 0u32;
 		while cnt < by {
 			self.bck();
 			cnt += 1;
@@ -61,11 +61,11 @@ impl Memory {
 	}
 
 	pub fn inc(&mut self) {
-		self.mem[self.memptr] += 1;
+		self.mem[self.memptr] = self.mem[self.memptr] + 1;
 	}
 
-	pub fn lft(&mut self, by: uint) {
-		let mut cnt = 0u;
+	pub fn lft(&mut self, by: u32) {
+		let mut cnt = 0u32;
 		while cnt < by {
 			self.inc();
 			cnt += 1;
@@ -73,11 +73,11 @@ impl Memory {
 	}
 
 	pub fn dcr(&mut self) {
-		self.mem[self.memptr] -= 1;
+		self.mem[self.memptr] = self.mem[self.memptr] - 1;
 	}
 
-	pub fn dwn(&mut self, by: uint) {
-		let mut cnt = 0u;
+	pub fn dwn(&mut self, by: u32) {
+		let mut cnt = 0u32;
 		while cnt < by {
 			self.dcr();
 			cnt += 1;
